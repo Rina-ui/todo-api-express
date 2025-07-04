@@ -3,12 +3,13 @@ import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 
 export const register = async (req, res) => {
+    console.log("Register endpoint hit");
     console.log('Body received:', req.body);
 
     try{
         const existingUser = await User.findOne({username: req.body.username});
         if ( existingUser) {
-            return res.ststus(400).json({error: 'Username already exists'});
+            return res.status(400).json({error: 'Username already exists'});
         }
 
         //hash password

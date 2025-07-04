@@ -1,15 +1,10 @@
 import http from 'http';
 import app from './app.js';
-import { parse } from 'path';
 
 const normalizePort = val => {
     const port = parseInt(val, 10);
-    if (isNaN(port)){
-        return val;
-    }
-    if (port >= 0){
-        return port;
-    }
+    if (isNaN(port)) return val;
+    if (port >= 0) return port;
     return false;
 };
 
@@ -18,9 +13,9 @@ app.set('port', port);
 
 const errorHandler = error => {
     if (error.syscall !== 'listen') throw error;
-    const address = Server.address();
-    const bind = typeof address === 'string' ? 'pipe' + address: 'port' + port;
-    switch (error.code){
+    const address = server.address(); // ✅ corrigé ici
+    const bind = typeof address === 'string' ? 'pipe ' + address : 'port ' + port; // ✅ espace ajouté
+    switch (error.code) {
         case 'EACCES':
             console.error(bind + ' requires elevated privileges');
             process.exit(1);
@@ -36,9 +31,9 @@ const server = http.createServer(app);
 
 server.on('error', errorHandler);
 server.on('listening', () => {
-    const address = server.address();
+    const address = server.address(); // ✅ corrigé ici aussi
     const bind = typeof address === 'string' ? 'pipe ' + address : 'port ' + port;
     console.log('Listening on ' + bind);
-})
+});
 
 server.listen(port);

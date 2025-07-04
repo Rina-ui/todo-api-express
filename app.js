@@ -4,9 +4,10 @@ import mongoose from 'mongoose';
 import userRoutes from './routes/user.js';
 
 const app = express();
+export default app;
 
 // Connect to MongoDB
-mongoose.connect('mongodb+srv://m40282897:ma-gra12@cluster0.7q1vrxe.mongodb.net/nom_de_ta_base?retryWrites=true&w=majority&appName=Cluster0',{
+mongoose.connect('mongodb+srv://m40282897:ma-gra12@cluster0.7q1vrxe.mongodb.net/ToDoFlutter?retryWrites=true&w=majority&appName=Cluster0',{
     useUnifiedTopology: true
 })
 .then(() => {
