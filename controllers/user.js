@@ -28,39 +28,31 @@ export const register = async (req, res) => {
 }
 
 export const login = async (req, res) => {
-    User.findOne({
-        username: req.body.username
-    })
-    .then(user => {
-        if (user === null) {
-            return res.status(401).json({error: 'User not found'});
-        }else{
-            bcrypt.compare(req.body.password, user.password)
-            .then(valid => {
-                if (!valid){
-                    return res.status(401).json({error: 'Incorrect password'});
-                }else{
-                    return res.status(200).json({
-                        userId: user._id,
-                        token: jwt.sign(
-                            {
-                                userId: user._id
-                            },
-                            'RANDOM_TOKEN_SECRET',
-                            {
-                                expiresIn: '24h'
-                            }
+  try {
+    const user = await User.findOne({ username: req.body.username });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
 
-                        )
-                    });
-                }
-            })
-            .catch(error => {
-                res.status(500).json({error})
-            });
-        }
-    })
-    .catch(error => {
-        res.status(500).json({error})
+    const valid = await bcrypt.compare(req.body.password, user.password);
+    if (!valid) {
+      return res.status(401).json({ error: 'Incorrect password' });
+    }
+
+    const token = jwt.sign(
+      { userId: user._id },
+      'RANDOM_TOKEN_SECRET',
+      { expiresIn: '24h' }       // veille bien à cette orthographe
+    );
+
+    // Envoi de la réponse avec token
+    return res.status(200).json({
+      userId: user._id,
+      token: token
     });
-}
+
+  } catch (error) {
+    console.error('Error during login:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
