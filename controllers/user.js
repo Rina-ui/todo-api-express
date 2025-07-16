@@ -42,10 +42,10 @@ export const login = async (req, res) => {
     const token = jwt.sign(
       { userId: user._id },
       'RANDOM_TOKEN_SECRET',
-      { expiresIn: '24h' }       // veille bien à cette orthographe
+      { expiresIn: '24h' }       
     );
 
-    // Envoi de la réponse avec token
+    // send answer with token
     return res.status(200).json({
       userId: user._id,
       token: token
